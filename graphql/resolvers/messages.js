@@ -21,7 +21,10 @@ module.exports = {
         });
 
         await chat.save();
-
+        // 指傳回index:0的messages 讓前端update chatId裡面的message local state
+        context.pubsub.publish("NEW_MESSAGE", {
+          newMessage: { message: chat.messages[0], chatId },
+        });
         return chat;
       }
       throw new UserInputError("Chat not found");
@@ -39,6 +42,13 @@ module.exports = {
         return chat;
       }
       throw new AuthenticationError("Action not Allowed");
+    },
+  },
+  // TODO:subscribe Messages update
+  // 當有create messages的時候 發送消息
+  Subscription: {
+    newMessage: {
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator("NEW_MESSAGE"),
     },
   },
 };

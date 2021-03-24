@@ -12,5 +12,6 @@ module.exports = {
   },
   Subscription: {
     ...chatsResolvers.Subscription,
+    ...messagesResolvers.Subscription,
   },
 };

@@ -1,5 +1,9 @@
 const { gql } = require("apollo-server");
 module.exports = gql`
+  type NewMessage {
+    chatId: ID!
+    message: Message!
+  }
   type Chat {
     id: ID!
     body: String!
@@ -47,5 +51,6 @@ module.exports = gql`
   }
   type Subscription {
     newChat: Chat!
+    newMessage: NewMessage!
   }
 `;
