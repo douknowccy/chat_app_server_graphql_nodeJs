@@ -36,6 +36,10 @@ module.exports = {
       });
 
       const chat = await newChat.save();
+      // subscribe+
+      context.pubsub.publish("NEW_CHAT", {
+        newChat: chat,
+      });
       return chat;
     },
     deleteChat: async (_, { chatId }, context) => {
@@ -50,6 +54,26 @@ module.exports = {
       } catch (error) {
         throw new Error(error);
       }
+    },
+    likeChat: async (_, { chatId }, context) => {
+      const { username } = checkAuth(context);
+      const chat = await Chat.findById(chatId);
+      if (!chat) throw new UserInputError("Chat not found");
+      if (chat.likes.find((like) => like.username === username)) {
+        // already like
+        chat.likes = chat.likes.filter((like) => like.username !== username);
+      } else {
+        // not like ,like chat
+        chat.likes.push({ username, createdAt: new Date().toISOString() });
+      }
+      await chat.save();
+      return chat;
+    },
+  },
+
+  Subscription: {
+    newChat: {
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator("NEW_CHAT"),
     },
   },
 };

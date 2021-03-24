@@ -16,6 +16,12 @@ const messagesSchema = new Schema({
       },
     },
   ],
+  likes: [
+    {
+      createdAt: String,
+      username: String,
+    },
+  ],
 });
 
 module.exports = model("Chat", messagesSchema, "Chat");
