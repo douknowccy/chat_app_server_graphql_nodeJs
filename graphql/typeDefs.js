@@ -21,9 +21,12 @@ module.exports = gql`
   }
   type Query {
     getChats: [Chat]
+    getChat(chatId: ID!): Chat
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
+    createChat(body: String!): Chat!
+    deleteChat(chatId: ID!): String!
   }
 `;
